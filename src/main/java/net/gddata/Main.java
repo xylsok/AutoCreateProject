@@ -17,7 +17,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-
         Properties properties = new Properties();
         File file = new File("info.properties");
         FileInputStream fis = null;
@@ -31,6 +30,19 @@ public class Main {
                 String proName = properties.getProperty("project.name");
                 String proMavenDir = properties.getProperty("project.mavendir");
                 String proDir = properties.getProperty("project.dir");
+
+                String proGroupId = properties.getProperty("project.groupId");
+                String proArtifactId = properties.getProperty("project.artifactId");
+
+                String jdbcHost = properties.getProperty("jdbc.host");
+                String jdbcPort = properties.getProperty("jdbc.port");
+                String jdbcUsername = properties.getProperty("jdbc.username");
+                String jdbcPassword = properties.getProperty("jdbc.password");
+                String jdbcDb = properties.getProperty("jdbc.db");
+
+                String springApplicationName = properties.getProperty("spring.application.name");
+                String springServerPort = properties.getProperty("spring.server.port");
+
 
                 List<String> list = new ArrayList();
                 for (int i = 1; i <= 10; i++) {
@@ -111,23 +123,45 @@ public class Main {
                     if (!file2.exists() || !file2.isFile()) {
                         System.out.println("Error: application.properties不存在");
                     }
-                    File file3 = new File(projectPath + "/" + proMavenDir + "resources/application.properties");
-
-
                     try {
-                        System.out.println("正在拷贝: application.properties ");
-                        copyFile(file2.getPath(), file3.getPath());
+                        System.out.println("正在拷贝: application.properties...");
+                        StringBuffer application = getSB(projectPath1 + "/application.properties");
+                        String appReplace = application.toString().replace("myPajectName", springApplicationName);
+                        String appReplace2 = appReplace.replace("myPort", springServerPort);
+                        String appReplace3 = appReplace2.replace("myJdbcHost", jdbcHost);
+                        String appReplace4 = appReplace3.replace("myJdbcPort", jdbcPort);
+                        String appReplace5 = appReplace4.replace("myJdbcDb", jdbcDb);
+                        String appReplace6 = appReplace5.replace("myJdbcUsername", jdbcUsername);
+                        String appReplace7 = appReplace6.replace("myJdbcPassword", jdbcPassword);
+                        toFile(appReplace7, projectPath + "/" + proMavenDir + "resources/application.properties");
 
-                        System.out.println("正在拷贝: pom.xml  ");
-                        copyFile(projectPath1 + "/pom.xml", projectPath + "/pom.xml");
+                        System.out.println("正在拷贝: pom.xml....");
+                        StringBuffer pom = getSB(projectPath1 + "/pom.xml");
+                        String replace1 = pom.toString().replace("myGroupId", proGroupId);
+                        System.out.println("修改: GroupId");
+                        String replace2 = replace1.replace("myArtifactId", proArtifactId);
+                        System.out.println("修改: ArtifactId");
+                        String replace3 = replace2.replace("myHost", jdbcHost);
+                        System.out.println("修改: Host");
+                        String replace4 = replace3.replace("myPort", jdbcPort);
+                        System.out.println("修改: Port");
+                        String replace5 = replace4.replace("myUsername", jdbcUsername);
+                        System.out.println("修改: Username");
+                        String replace6 = replace5.replace("myPassword", jdbcPassword);
+                        System.out.println("修改: Password");
+                        String replace7 = replace6.replace("myDb", jdbcDb);
+                        System.out.println("修改: Db");
+                        toFile(replace7, projectPath + "/pom.xml");
+                        System.out.println("pom.xml已处理完并写入" + proName);
 
-                        System.out.println("正在拷贝: JooqDao.java");
-
+                        System.out.println("正在拷贝: JooqDao.java...");
                         File dao = new File(projectPath + "/" + proMavenDir + "java/" + newProDir + "/dao");
                         if (!dao.exists() || !dao.isDirectory()) {
                             System.out.println("没找到dao目录，不执行copy JooqDao.java");
                         } else {
-                            copyFile(projectPath1 + "/JooqDao.java", projectPath + "/" + proMavenDir + "java/" + newProDir + "/dao/JooqDao.java");
+                            StringBuffer daoRep = getSB(projectPath1 + "/JooqDao.java");
+                            String daoReplace = daoRep.toString().replace("myPackage", proDir);
+                            toFile(daoReplace, projectPath + "/" + proMavenDir + "java/" + newProDir + "/dao/JooqDao.java");
                         }
 
                         System.out.println("正在拷贝: README.md  ");
@@ -139,11 +173,20 @@ public class Main {
                         System.out.println("正在拷贝: logback.xml  ");
                         copyFile(projectPath1 + "/logback.xml", projectPath + "/" + proMavenDir + "resources/logback.xml");
 
-                        System.out.println("正在拷贝: Main.java");
-                        copyFile(projectPath1 + "/Main.java", projectPath + "/" + proMavenDir + "java/" + newProDir + "/Main.java");
+                        System.out.println("正在拷贝: Main.java...");
+                        StringBuffer main = getSB(projectPath1 + "/Main.java");
+                        System.out.println("正在处理: package");
+                        String mainReplace = main.toString().replace("myPackage", proDir);
+                        toFile(mainReplace, projectPath + "/" + proMavenDir + "java/" + newProDir + "/Main.java");
+                        System.out.println("Main.java已处理完并写入" + proName);
 
-                        System.out.println("正在拷贝: Swagger2.java");
-                        copyFile(projectPath1 + "/Swagger2.java", projectPath + "/" + proMavenDir + "java/" + newProDir +"/Swagger2.java");
+                        System.out.println("正在拷贝: Swagger2.java....");
+                        StringBuffer swagger = getSB(projectPath1 + "/Swagger2.java");
+                        System.out.println("正在处理: Swagger2的javapackage");
+                        String swaggerReplace = swagger.toString().replace("myPackage", proDir);
+                        String swaggerReplace2 = swaggerReplace.replace("mySwaggerDir", proDir + ".ui");
+                        String swaggerReplace3 = swaggerReplace2.replace("myProdectName", proName);
+                        toFile(swaggerReplace3, projectPath + "/" + proMavenDir + "java/" + newProDir + "/Swagger2.java");
 
                         System.out.println("完成");
                     } catch (Exception e) {
@@ -246,5 +289,39 @@ public class Main {
         return filePath;
     }
 
+
+    public static StringBuffer getSB(String filePath) {
+        StringBuffer sb = new StringBuffer();
+        Reader reader = null;
+        BufferedReader br = null;
+        try {
+            reader = new FileReader(filePath);
+            br = new BufferedReader(reader);
+            String data = null;
+            while ((data = br.readLine()) != null) {
+                sb.append(data + "\r\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                reader.close();
+                br.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return sb;
+    }
+
+    public static void toFile(String sb, String path) {
+        try {
+            FileWriter fw = new FileWriter(path);
+            fw.write(sb);
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }
