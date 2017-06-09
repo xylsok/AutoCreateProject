@@ -19,7 +19,7 @@ public class Main {
 
 
         Properties properties = new Properties();
-        File file = new File("/Users/zhangzf/Codes/javaProject/AutoCreateProject/src/main/resources/info.properties");
+        File file = new File("info.properties");
         FileInputStream fis = null;
 
         try {
@@ -138,6 +138,12 @@ public class Main {
 
                         System.out.println("正在拷贝: logback.xml  ");
                         copyFile(projectPath1 + "/logback.xml", projectPath + "/" + proMavenDir + "resources/logback.xml");
+
+                        System.out.println("正在拷贝: Main.java");
+                        copyFile(projectPath1 + "/Main.java", projectPath + "/" + proMavenDir + "java/" + newProDir + "/Main.java");
+
+                        System.out.println("正在拷贝: Swagger2.java");
+                        copyFile(projectPath1 + "/Swagger2.java", projectPath + "/" + proMavenDir + "java/" + newProDir +"/Swagger2.java");
 
                         System.out.println("完成");
                     } catch (Exception e) {
