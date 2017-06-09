@@ -1,10 +1,6 @@
 package net.gddata;
 
 import java.io.*;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -16,14 +12,11 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-
         Properties properties = new Properties();
         File file = new File("info.properties");
         FileInputStream fis = null;
-
         try {
             fis = new FileInputStream(file);
-
             try {
                 properties.load(fis);
                 String proPath = properties.getProperty("project.path");
@@ -206,12 +199,8 @@ public class Main {
         }
 
     }
-
-
     public static void copyFile(String srcFileName, String destFileName) throws Exception {
         File srcFile = new File(srcFileName);
-
-
         // 判断目标文件是否存在
         File destFile = new File(destFileName);
         // 复制文件
